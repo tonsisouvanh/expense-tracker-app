@@ -1,11 +1,15 @@
 // ProtectedRoute.js
-import { Navigate, Outlet } from "react-router-dom";
-// import { supabase } from "./supabaseClient";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  //   const session = supabase.auth.session();
-  const session = null;
-  return session ? <Outlet /> : <Navigate to="/sign-in" />;
+  const location = useLocation();
+  const { user } = useSelector((state) => state.auth);
+  return user ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/sign-in" replace state={{ from: location }} />
+  );
 };
 
 export default ProtectedRoute;

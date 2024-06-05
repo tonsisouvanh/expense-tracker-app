@@ -2,18 +2,10 @@ import { Button, DatePicker, Dropdown, Space } from "antd";
 import Topbar from "../../components/topbar/Topbar";
 import { useState } from "react";
 import { FaCaretDown, FaCheck } from "react-icons/fa6";
-import {
-  FaBriefcase,
-  FaDollarSign,
-  FaUniversity,
-  FaMoneyBillWave,
-  FaPiggyBank,
-} from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
-import useIncomeCategory from "../../components/hooks/useIncomeCategory";
-
+import useIncomeCategory from "../../hooks/useIncomeCategory";
 
 const IncomePage = () => {
   const navigate = useNavigate();
@@ -37,7 +29,7 @@ const IncomePage = () => {
     label: (
       <div
         onClick={() => setSelectedCate(cate.name)}
-        className="flex justify-between items-center gap-2"
+        className="flex items-center justify-between gap-2"
       >
         <div className="inline-flex items-center gap-2">
           {cate.icon}
@@ -58,7 +50,7 @@ const IncomePage = () => {
 
   return (
     <>
-      <section className="w-full flex flex-col justify-between">
+      <section className="flex w-full flex-col justify-between">
         <Topbar title="Income" containerClassName={"px-3"} />
         <div className="flex flex-col items-center gap-10">
           <div className="flex flex-col items-center gap-4">
@@ -67,12 +59,12 @@ const IncomePage = () => {
               type="text" // Change input type to text for comma separation
               value={budget}
               onChange={handleBudgetChange}
-              className="bg-transparent focus:outline-none rounded-md text-4xl text-center"
+              className="rounded-md bg-transparent text-center text-4xl focus:outline-none"
               placeholder="0"
             />
           </div>
         </div>
-        <div className="flex h-screen gap-5 bg-zinc-900 flex-col justify-start p-10 mt-10 rounded-t-[2rem]">
+        <div className="mt-10 flex h-screen flex-col justify-start gap-5 rounded-t-[2rem] bg-zinc-900 p-10">
           <DatePicker
             inputReadOnly
             className="bg-transparent"
@@ -85,11 +77,11 @@ const IncomePage = () => {
             menu={{
               items,
             }}
-            className="border py-2 px-3 rounded-md border-stone-700"
+            className="rounded-md border border-stone-700 px-3 py-2"
             trigger={["click"]}
           >
             <a
-              className="flex justify-between items-center"
+              className="flex items-center justify-between"
               onClick={(e) => e.preventDefault()}
             >
               <Space
@@ -118,7 +110,7 @@ const IncomePage = () => {
           <Button
             onClick={handleSubmit}
             size="large"
-            className=" bg-primary text-secondary font-semibold flex items-center justify-center py-6 px-28"
+            className="flex items-center justify-center bg-primary px-28 py-6 font-semibold text-secondary"
           >
             SAVE
           </Button>

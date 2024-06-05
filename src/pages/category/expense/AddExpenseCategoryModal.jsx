@@ -2,7 +2,7 @@ import { Button, Input, Modal } from "antd";
 import React, { useState } from "react";
 import { FaDeaf } from "react-icons/fa";
 import Icon from "../../../components/Icon";
-import useExpenseCategory from "../../../components/hooks/useExpenseCategory";
+import useExpenseCategory from "../../../hooks/useExpenseCategory";
 
 const AddExpenseCategoryModal = ({ isOpen, setIsOpen }) => {
   const [selectedIcon, setSelectedIcon] = useState(null);
@@ -45,15 +45,15 @@ const AddExpenseCategoryModal = ({ isOpen, setIsOpen }) => {
       ]}
     >
       <div className="flex items-center gap-2">
-        <Icon className={`${!selectedIcon && "w-[52px] h-[52px]"}`}>
+        <Icon className={`${!selectedIcon && "h-[52px] w-[52px]"}`}>
           {selectedIcon}
         </Icon>
         <Input type="text" className="py-[14px]" size="large" />
       </div>
-      <div className="grid grid-cols-5 gap-3 mt-3">
+      <div className="mt-3 grid grid-cols-5 gap-3">
         {expenseCategories.map((item) => (
           <Icon
-            className={`flex justify-center cursor-pointer ${
+            className={`flex cursor-pointer justify-center ${
               selectedIcon === item.icon && "bg-primary/90"
             }`}
             onClick={() => setSelectedIcon(item.icon)}

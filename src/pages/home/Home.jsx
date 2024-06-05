@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <>
       <div className="w-full px-2 py-4">
-        <div className="text-sm space-y-8">
+        <div className="space-y-8 text-sm">
           <TransactionList />
         </div>
       </div>

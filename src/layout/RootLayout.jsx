@@ -10,9 +10,9 @@ const RootLayout = () => {
   };
 
   return (
-    <div className="w-full flex flex-col md:flex">
+    <div className="flex w-full flex-col md:flex">
       {renderTopbar()}
-      <section className="flex flex-1 h-full">
+      <section className="flex h-full flex-1">
         <Outlet />
       </section>
       {hideBottombarPath.includes(pathname) ? null : <BottomBar />}

@@ -3,7 +3,7 @@ import { FaPencil, FaTrash } from "react-icons/fa6";
 import { useState } from "react";
 import EditIncomeCategoryModal from "./EditIncomeCategoryModal";
 import AddIncomeCategoryModal from "./AddIncomeCategoryModal";
-import useIncomeCategory from "../../../components/hooks/useIncomeCategory";
+import useIncomeCategory from "../../../hooks/useIncomeCategory";
 import Icon from "../../../components/Icon";
 const CategoryIncomeTab = () => {
   const { incomeCategories } = useIncomeCategory();
@@ -27,17 +27,17 @@ const CategoryIncomeTab = () => {
       />
       <ul className="space-y-5">
         {incomeCategories.map((item) => (
-          <li className="flex justify-between items-center" key={item.id}>
+          <li className="flex items-center justify-between" key={item.id}>
             <div className="flex items-center gap-2">
               <Icon>{item.icon}</Icon>
               <span className="font-bold">{item.name}</span>
             </div>
-            <div className="flex text-xl items-center gap-4">
+            <div className="flex items-center gap-4 text-xl">
               <FaPencil
                 onClick={() => handleEditOpen(item)}
-                className="hover:text-primary cursor-pointer"
+                className="cursor-pointer hover:text-primary"
               />
-              <FaTrash className="hover:text-primary cursor-pointer" />
+              <FaTrash className="cursor-pointer hover:text-primary" />
             </div>
           </li>
         ))}
@@ -46,7 +46,7 @@ const CategoryIncomeTab = () => {
         onClick={() => setIsAddOpen(true)}
         size="large"
         type="primary"
-        className="sticky bottom-10 left-0 right-0 text-secondary font-semibold w-full flex items-center justify-center py-6 px-28"
+        className="sticky bottom-10 left-0 right-0 flex w-full items-center justify-center px-28 py-6 font-semibold text-secondary"
       >
         ADD NEW +
       </Button>
