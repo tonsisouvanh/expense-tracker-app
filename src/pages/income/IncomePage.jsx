@@ -1,120 +1,150 @@
-import { Button, DatePicker, Dropdown, Space } from "antd";
+import { Button, DatePicker, Dropdown, Space, notification } from "antd";
 import Topbar from "../../components/topbar/Topbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCaretDown, FaCheck } from "react-icons/fa6";
 import { IoIosSettings } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import useIncomeCategory from "../../hooks/useIncomeCategory";
+import { fetchCategories } from "../../store/features/CategorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addIncome } from "../../store/features/IncomeSlice";
+import { budget } from "../../assets";
 
 const IncomePage = () => {
   const navigate = useNavigate();
-  const [budget, setBudget] = useState(""); // State to store the budget input
-  const [selectedCate, setSelectedCate] = useState(null);
+  const dispatch = useDispatch();
+
+  const { activeBudget } = useSelector((state) => state.budget);
+  const { categories } = useSelector((state) => state.category);
+  const { status } = useSelector((state) => state.income);
+
+  const [amount, setAmount] = useState(0); // State to store the amount input
+  const [selectedCate, setSelectedCate] = useState({
+    id: "",
+    category_name: "",
+  });
   const [selectedDate, setSelectedDate] = useState(null);
   const [description, setDescription] = useState("");
-  const { incomeCategories } = useIncomeCategory();
-  // Function to format budget input with commas
-  const handleBudgetChange = (e) => {
-    const rawValue = e.target.value.replace(/,/g, ""); // Remove existing commas
-    const newValue = rawValue.replace(/\D/g, ""); // Remove non-numeric characters
-    const formattedValue = new Intl.NumberFormat().format(newValue); // Format with commas
-    setBudget(formattedValue);
-  };
-  const onChange = (date, dateString) => {
-    setSelectedDate(date);
+
+  const { incomeIconMapping } = useIncomeCategory();
+
+  const onReceivedDateChange = (date, dateString) => {
+    setSelectedDate(dateString);
   };
 
-  const items = incomeCategories.map((cate, index) => ({
-    label: (
-      <div
-        onClick={() => setSelectedCate(cate.name)}
-        className="flex items-center justify-between gap-2"
-      >
-        <div className="inline-flex items-center gap-2">
-          {cate.icon}
-          <p>{cate.name}</p>
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    setAmount(value === "" ? 0 : Number(value));
+  };
+
+  const items = categories
+    .filter((filterCate) => filterCate.category_type === "income")
+    .map((cate, index) => ({
+      label: (
+        <div
+          onClick={() =>
+            setSelectedCate({ id: cate.id, category_name: cate.category_name })
+          }
+          className="flex items-center justify-between gap-2"
+        >
+          <div className="inline-flex items-center gap-2 text-xl">
+            {incomeIconMapping[cate.icon]}
+            <p>{cate.category_name}</p>
+          </div>
+          {selectedCate.category_name === cate.category_name && <FaCheck />}
         </div>
-        {selectedCate === cate.name && <FaCheck />}
-      </div>
-    ),
-    key: index,
-  }));
-
+      ),
+      key: index,
+    }));
+  // TODO: Create income
   const handleSubmit = () => {
-    console.log(selectedCate);
-    console.log(selectedDate);
-    console.log(description);
-    console.log(budget);
-  };
+    if (!selectedCate.id || !selectedDate || amount === 0) {
+      notification.error({ description: "Please fill in all fields" });
+      return;
+    }
+    const newIncome = {
+      amount,
+      category: selectedCate,
+      received_date: selectedDate,
+      description,
+      budget_id: activeBudget.id,
+    };
 
+    dispatch(addIncome(newIncome));
+  };
   return (
     <>
       <section className="flex w-full flex-col justify-between">
         <Topbar title="Income" containerClassName={"px-3"} />
-        <div className="flex flex-col items-center gap-10">
-          <div className="flex flex-col items-center gap-4">
-            <h1 className="text-2xl">How much?</h1>
-            <input
-              type="text" // Change input type to text for comma separation
-              value={budget}
-              onChange={handleBudgetChange}
-              className="rounded-md bg-transparent text-center text-4xl focus:outline-none"
-              placeholder="0"
-            />
+        <form>
+          <div className="flex flex-col items-center gap-10">
+            <div className="flex flex-col items-center gap-4">
+              <h1 className="text-2xl">How much?</h1>
+              <input
+                type="number"
+                value={amount === 0 ? "" : amount}
+                onChange={handleAmountChange}
+                className="rounded-md bg-transparent text-center text-4xl focus:outline-none"
+                placeholder="0"
+              />
+            </div>
           </div>
-        </div>
-        <div className="mt-10 flex h-screen flex-col justify-start gap-5 rounded-t-[2rem] bg-zinc-900 p-10">
-          <DatePicker
-            inputReadOnly
-            className="bg-transparent"
-            size="large"
-            format={"DD-MM-YYYY"}
-            onChange={onChange}
-          />
-          {/* TODO: Change dropdown to Select for overflow scrolling */}
-          <Dropdown
-            menu={{
-              items,
-            }}
-            className="rounded-md border border-stone-700 px-3 py-2"
-            trigger={["click"]}
-          >
-            <a
-              className="flex items-center justify-between"
-              onClick={(e) => e.preventDefault()}
+          <div className="mt-10 flex h-screen flex-col justify-start gap-5 rounded-t-[2rem] bg-zinc-900 p-10">
+            <DatePicker
+              inputReadOnly
+              className="bg-transparent"
+              size="large"
+              format={"DD-MM-YYYY"}
+              onChange={onReceivedDateChange}
+            />
+            {/* TODO: Change dropdown to Select for overflow scrolling */}
+            <Dropdown
+              menu={{
+                items,
+              }}
+              className="rounded-md border border-stone-700 px-3 py-2"
+              trigger={["click"]}
             >
-              <Space
-                className={`text-stone-600 ${selectedCate && "text-white"}`}
+              <a
+                className="flex items-center justify-between"
+                onClick={(e) => e.preventDefault()}
               >
-                {selectedCate ? selectedCate : "Choose Category"}
-                <FaCaretDown />
-              </Space>
-              <Button
-                onClick={() => navigate("/category/setting")}
-                icon={<IoIosSettings />}
-              ></Button>
-            </a>
-          </Dropdown>
-          <TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Controlled autosize"
-            autoSize={{
-              minRows: 3,
-              maxRows: 5,
-            }}
-            size="large"
-            className="bg-transparent"
-          />
-          <Button
-            onClick={handleSubmit}
-            size="large"
-            className="flex items-center justify-center bg-primary px-28 py-6 font-semibold text-secondary"
-          >
-            SAVE
-          </Button>
-        </div>
+                <Space
+                  className={`text-stone-600 ${selectedCate && "text-white"}`}
+                >
+                  {selectedCate.category_name
+                    ? selectedCate.category_name
+                    : "Choose Category"}
+                  <FaCaretDown />
+                </Space>
+                <Button
+                  onClick={() => navigate("/category/setting")}
+                  icon={<IoIosSettings />}
+                ></Button>
+              </a>
+            </Dropdown>
+            <TextArea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Controlled autosize"
+              autoSize={{
+                minRows: 3,
+                maxRows: 5,
+              }}
+              size="large"
+              className="bg-transparent"
+            />
+            <Button
+              onClick={handleSubmit}
+              loading={status === "loading"}
+              size="large"
+              className="flex items-center justify-center bg-primary px-28 py-6 font-semibold text-secondary"
+            >
+              SAVE
+            </Button>
+          </div>
+        </form>
       </section>
     </>
   );

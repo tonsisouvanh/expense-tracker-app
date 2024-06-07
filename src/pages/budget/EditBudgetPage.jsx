@@ -3,7 +3,7 @@ import Topbar from "../../components/topbar/Topbar";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { updateBudget } from "../../store/features/budgetSlice";
+import { updateBudget } from "../../store/features/BudgetSlice";
 import { formatDateString } from "../../utils";
 import dayjs from "dayjs";
 import supabase from "../../lib/supabase";

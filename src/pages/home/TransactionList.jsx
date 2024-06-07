@@ -1,5 +1,5 @@
 import Transaction from "./Transaction";
-
+// TODO: Render all transactions in a list
 const TransactionList = () => {
   return (
     <>

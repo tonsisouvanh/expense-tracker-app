@@ -3,10 +3,12 @@ import { FaPencil, FaTrash } from "react-icons/fa6";
 import { useState } from "react";
 import EditIncomeCategoryModal from "./EditIncomeCategoryModal";
 import AddIncomeCategoryModal from "./AddIncomeCategoryModal";
-import useIncomeCategory from "../../../hooks/useIncomeCategory";
 import Icon from "../../../components/Icon";
+import { useSelector } from "react-redux";
+import useIncomeCategory from "../../../hooks/useIncomeCategory";
 const CategoryIncomeTab = () => {
-  const { incomeCategories } = useIncomeCategory();
+  const { incomeIconMapping } = useIncomeCategory();
+  const { categories } = useSelector((state) => state.category);
 
   const [editCategory, setEditCategory] = useState(null);
 
@@ -26,21 +28,23 @@ const CategoryIncomeTab = () => {
         editCategory={editCategory}
       />
       <ul className="space-y-5">
-        {incomeCategories.map((item) => (
-          <li className="flex items-center justify-between" key={item.id}>
-            <div className="flex items-center gap-2">
-              <Icon>{item.icon}</Icon>
-              <span className="font-bold">{item.name}</span>
-            </div>
-            <div className="flex items-center gap-4 text-xl">
-              <FaPencil
-                onClick={() => handleEditOpen(item)}
-                className="cursor-pointer hover:text-primary"
-              />
-              <FaTrash className="cursor-pointer hover:text-primary" />
-            </div>
-          </li>
-        ))}
+        {categories
+          .filter((cateFilter) => cateFilter.category_type === "income")
+          .map((item) => (
+            <li className="flex items-center justify-between" key={item.id}>
+              <div className="flex items-center gap-2">
+                <Icon>{incomeIconMapping[item.icon]}</Icon>
+                <span className="font-bold">{item.category_name}</span>
+              </div>
+              {/* <div className="flex items-center gap-4 text-xl">
+                <FaPencil
+                  onClick={() => handleEditOpen(item)}
+                  className="cursor-pointer hover:text-primary"
+                />
+                <FaTrash className="cursor-pointer hover:text-primary" />
+              </div> */}
+            </li>
+          ))}
       </ul>
       <Button
         onClick={() => setIsAddOpen(true)}

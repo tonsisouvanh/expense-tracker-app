@@ -6,11 +6,16 @@ import { formatDateString } from "../../utils";
 export const fetchActiveBudget = createAsyncThunk(
   "budgets/fetchActiveBudget",
   async () => {
-    const currentDate = new Date().toLocaleDateString();
+    const currentDate = formatDateString(
+      new Date().toLocaleDateString(),
+      "MM-DD-YYYY",
+      "YYYY-MM-DD",
+    );
     const { data, error } = await supabase
       .from("budgets")
       .select("*")
-      .gt("end_date", currentDate)
+      .lte("start_date", currentDate)
+      .gte("end_date", currentDate)
       .limit(1);
     if (error) throw new Error(error.message);
     return data[0];
@@ -26,7 +31,6 @@ export const fetchBudgets = createAsyncThunk(
       .select("*")
       .eq("user_id", userId)
       .eq("is_deleted", false);
-
     if (error) throw new Error(error.message);
     return data;
   },
@@ -114,8 +118,8 @@ const initialState = {
   error: null,
 };
 
-const budgetSlice = createSlice({
-  name: "budgets",
+const BudgetSlice = createSlice({
+  name: "budget",
   initialState,
   reducers: {
     resetStatus: (state) => {
@@ -153,6 +157,7 @@ const budgetSlice = createSlice({
       .addCase(createBudget.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.budgets.push(action.payload);
+        state.activeBudget = { ...action.payload };
       })
       .addCase(createBudget.rejected, (state, action) => {
         state.status = "failed";
@@ -191,6 +196,6 @@ const budgetSlice = createSlice({
   },
 });
 
-export const { resetStatus } = budgetSlice.actions;
+export const { resetStatus } = BudgetSlice.actions;
 
-export default budgetSlice.reducer;
+export default BudgetSlice.reducer;

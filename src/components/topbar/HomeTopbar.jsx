@@ -3,6 +3,7 @@ import { expense, income } from "../../assets";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { formatDateString, formatPrice } from "../../utils";
 
 const months = [
   { value: "january", label: "January" },
@@ -21,6 +22,7 @@ const months = [
 
 const HomeTopbar = () => {
   const { budgets, activeBudget } = useSelector((state) => state.budget);
+  const { incomes, totalIncome } = useSelector((state) => state.income);
   const navigate = useNavigate();
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -45,15 +47,33 @@ const HomeTopbar = () => {
             className="w-[10rem]"
           />
         </div> */}
-        <div className="flex items-center gap-20">
+        <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex flex-col items-center">
             <h2 className="">Budget</h2>
-            <span className="text-2xl font-bold">{activeBudget?.amount}</span>
+            <span className="text-2xl font-bold">
+              {formatPrice(activeBudget?.amount) || 0}
+            </span>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex items-center">
+            <span>Period: </span>
+            <span className="ml-2 font-semibold">
+              {formatDateString(
+                activeBudget?.start_date,
+                "YYYY-MM-DD",
+                "DD-MM-YYYY",
+              )}{" "}
+              <span className="mx-3">to</span>{" "}
+              {formatDateString(
+                activeBudget?.end_date,
+                "YYYY-MM-DD",
+                "DD-MM-YYYY",
+              )}
+            </span>
+          </div>
+          {/* <div className="flex flex-col items-center">
             <h2 className="">Account balance</h2>
             <span className="text-2xl font-bold">0</span>
-          </div>
+          </div> */}
         </div>
         <div className="grid w-full grid-cols-2 gap-5">
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-4 text-white">
@@ -62,7 +82,7 @@ const HomeTopbar = () => {
             </div>
             <div>
               <h3>Income</h3>
-              <span>0</span>
+              <span>+{totalIncome}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-4 text-white">

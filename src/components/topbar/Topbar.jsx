@@ -5,11 +5,11 @@ const Topbar = ({ title, containerClassName }) => {
   const navigate = useNavigate();
   return (
     <section className={`w-full py-10 ${containerClassName}`}>
-      <div className="flex relative items-center w-full">
-        <div className="absolute cursor-pointer top-0 left-0">
-          <FaArrowLeftLong onClick={() => navigate(-1)} className="text-2xl" />
+      <div className="relative flex w-full items-center">
+        <div className="absolute left-0 top-0 cursor-pointer">
+          <FaArrowLeftLong onClick={() => navigate("/")} className="text-2xl" />
         </div>
-        <div className="flex-1 justify-center flex">
+        <div className="flex flex-1 justify-center">
           <h1 className="text-xl">{title}</h1>
         </div>
       </div>
