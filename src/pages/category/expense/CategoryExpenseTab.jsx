@@ -7,13 +7,13 @@ import EditExpenseCategoryModal from "./EditExpenseCategoryModal";
 import Icon from "../../../components/Icon";
 
 const CategoryExpenseTab = () => {
-  const { expenseCategories } = useExpenseCategory();
+  const { expenseIconMapping } = useExpenseCategory();
 
   const [editCategory, setEditCategory] = useState(null);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-
+// TODO: fix this
   const handleEditOpen = (item) => {
     setIsEditOpen(true);
     setEditCategory({ ...item });
@@ -26,23 +26,24 @@ const CategoryExpenseTab = () => {
         setIsOpen={setIsEditOpen}
         editCategory={editCategory}
       />
-      <ul className="space-y-5">
-        {expenseCategories.map((item) => (
-          <li className="flex items-center justify-between" key={item.id}>
-            <div className="flex items-center gap-2">
-              <Icon>{item.icon}</Icon>
-              <span className="font-bold">{item.name}</span>
-            </div>
-            <div className="flex items-center gap-4 text-xl">
-              <FaPencil
-                onClick={() => handleEditOpen(item)}
-                className="cursor-pointer hover:text-primary"
-              />
-              <FaTrash className="cursor-pointer hover:text-primary" />
-            </div>
-          </li>
-        ))}
-      </ul>
+      {/* <ul className="space-y-5">
+        {expenseIconMapping &&
+          expenseIconMapping.map((item) => (
+            <li className="flex items-center justify-between" key={item.id}>
+              <div className="flex items-center gap-2">
+                <Icon>{item.icon}</Icon>
+                <span className="font-bold">{item.name}</span>
+              </div>
+              <div className="flex items-center gap-4 text-xl">
+                <FaPencil
+                  onClick={() => handleEditOpen(item)}
+                  className="cursor-pointer hover:text-primary"
+                />
+                <FaTrash className="cursor-pointer hover:text-primary" />
+              </div>
+            </li>
+          ))}
+      </ul> */}
       <Button
         onClick={() => setIsAddOpen(true)}
         size="large"

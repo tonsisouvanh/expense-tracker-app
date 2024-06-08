@@ -7,8 +7,10 @@ import { createBudget } from "../../store/features/BudgetSlice";
 import { formatDateString } from "../../utils";
 import supabase from "../../lib/supabase";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 const BudgetPage = () => {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -16,7 +18,7 @@ const BudgetPage = () => {
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [oneMonthFromCurrent, setOneMonthFromCurrent] = useState(null);
-  const [amount, setAmount] = useState(""); // State to store the budget input
+  const [amount, setAmount] = useState("");
 
   const onDateChange = (date) => {
     const modifiedDate = new Date(date);
@@ -35,8 +37,8 @@ const BudgetPage = () => {
   // Function to format budget input with commas
   const handleBudgetChange = (e) => {
     const rawValue = e.target.value.replace(/,/g, ""); // Remove existing commas
-    const newValue = rawValue.replace(/\D/g, ""); // Remove non-numeric characters
-    const formattedValue = new Intl.NumberFormat().format(newValue); // Format with commas
+    const newValue = rawValue.replace(/\D/g, "");
+    const formattedValue = new Intl.NumberFormat().format(newValue);
     setAmount(formattedValue);
   };
 
@@ -63,17 +65,19 @@ const BudgetPage = () => {
       const currentDate = new Date().toLocaleDateString();
       const { data, error } = await supabase
         .from("budgets")
-        .select("*")
+        .select("id")
         .gt("end_date", currentDate)
         .limit(1);
       if (error) throw new Error(error.message);
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         navigate("/budget/edit");
       }
+      setLoading(false);
     };
     fetchBudgetDetail();
   }, [navigate]);
 
+  if (loading) return <Spinner />;
   return (
     <>
       <section className="w-full px-3">

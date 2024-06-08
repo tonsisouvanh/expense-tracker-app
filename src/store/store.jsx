@@ -3,10 +3,11 @@ import authReducer from "./features/auth/authSlice";
 import incomeReducer, {
   fetchIncomesByBudgetPeriod,
 } from "./features/IncomeSlice";
+import expenseReducer, {
+  fetchExpensesByBudgetPeriod,
+} from "./features/ExpenseSlice";
 import categoryReducer, { fetchCategories } from "./features/CategorySlice";
-import budgetsReducer, {
-  fetchActiveBudget,
-} from "./features/BudgetSlice";
+import budgetsReducer, { fetchActiveBudget } from "./features/BudgetSlice";
 
 const user = JSON.parse(localStorage.getItem("auth_info"));
 
@@ -14,6 +15,7 @@ const prefetchData = async () => {
   if (user === null || !user) return;
   store.dispatch(fetchActiveBudget());
   store.dispatch(fetchIncomesByBudgetPeriod(user.userId));
+  store.dispatch(fetchExpensesByBudgetPeriod(user.userId));
 };
 
 export const store = configureStore({
@@ -22,6 +24,7 @@ export const store = configureStore({
     budget: budgetsReducer,
     category: categoryReducer,
     income: incomeReducer,
+    expense: expenseReducer,
   },
 });
 

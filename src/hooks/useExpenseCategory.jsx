@@ -10,55 +10,68 @@ import {
   FaMoneyBillAlt,
 } from "react-icons/fa";
 
-const expenseCategories = [
-  {
-    id: 1,
-    name: "Groceries",
-    icon: <FaShoppingCart />,
-  },
-  {
-    id: 2,
-    name: "Dining",
-    icon: <FaUtensils />,
-  },
-  {
-    id: 3,
-    name: "Transportation",
-    icon: <FaCar />,
-  },
-  {
-    id: 4,
-    name: "Housing",
-    icon: <FaHome />,
-  },
-  {
-    id: 5,
-    name: "Travel",
-    icon: <FaPlane />,
-  },
-  {
-    id: 6,
-    name: "Health",
-    icon: <FaHeartbeat />,
-  },
-  {
-    id: 7,
-    name: "Entertainment",
-    icon: <FaFilm />,
-  },
-  {
-    id: 8,
-    name: "Education",
-    icon: <FaBook />,
-  },
-  {
-    id: 9,
-    name: "Other",
-    icon: <FaMoneyBillAlt />,
-  },
-];
+// const expenseCategories = [
+//   {
+//     id: 1,
+//     name: "Groceries",
+//     icon: <FaShoppingCart />,
+//   },
+//   {
+//     id: 2,
+//     name: "Dining",
+//     icon: <FaUtensils />,
+//   },
+//   {
+//     id: 3,
+//     name: "Transportation",
+//     icon: <FaCar />,
+//   },
+//   {
+//     id: 4,
+//     name: "Housing",
+//     icon: <FaHome />,
+//   },
+//   {
+//     id: 5,
+//     name: "Travel",
+//     icon: <FaPlane />,
+//   },
+//   {
+//     id: 6,
+//     name: "Health",
+//     icon: <FaHeartbeat />,
+//   },
+//   {
+//     id: 7,
+//     name: "Entertainment",
+//     icon: <FaFilm />,
+//   },
+//   {
+//     id: 8,
+//     name: "Education",
+//     icon: <FaBook />,
+//   },
+//   {
+//     id: 9,
+//     name: "Other",
+//     icon: <FaMoneyBillAlt />,
+//   },
+// ];
+
+const expenseIconMapping = {
+  FaShoppingCart: <FaShoppingCart />,
+  FaUtensils: <FaUtensils />,
+  FaCar: <FaCar />,
+  FaHome: <FaHome />,
+  FaPlane: <FaPlane />,
+  FaHeartbeat: <FaHeartbeat />,
+  FaFilm: <FaFilm />,
+  FaBook: <FaBook />,
+  FaMoneyBillAlt: <FaMoneyBillAlt />,
+};
+
 const useExpenseCategory = () => {
-  return { expenseCategories };
+  return { expenseIconMapping };
 };
 
 export default useExpenseCategory;

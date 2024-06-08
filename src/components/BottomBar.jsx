@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HiMiniHome,
   HiMiniChartPie,
@@ -8,6 +8,7 @@ import {
 } from "../icons";
 import { budget, expense, income } from "../assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import supabase from "../lib/supabase";
 
 const navItems = [
   {
@@ -33,6 +34,7 @@ const navItems = [
 ];
 
 const BottomBar = () => {
+  const [isBudgetExist, setIsBudgetExist] = useState(false);
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,46 +42,47 @@ const BottomBar = () => {
     setIsOpen(false);
     navigate(path);
   };
+
   return (
-    <nav className="bg-primary max-md:fixed sticky bottom-0 left-0 right-0 w-full">
-      <ul className="relative py-5 px-4 flex items-center text-secondary justify-between">
-        <div className="absolute flex justify-center w-full top-[-30px] left-0 right-0">
+    <nav className="fixed bottom-0 left-0 right-0 w-full bg-primary max-md:fixed">
+      <ul className="relative flex items-center justify-between px-4 py-5 text-secondary">
+        <div className="absolute left-0 right-0 top-[-30px] flex w-full justify-center">
           <FaPlus
             onClick={() => setIsOpen(!isOpen)}
-            className="text-[60px] cursor-pointer p-3 bg-primary rounded-full border-[6px] border-secondary"
+            className="cursor-pointer rounded-full border-[6px] border-secondary bg-primary p-3 text-[60px]"
           />
         </div>
         {isOpen && (
-          <div className="w-full flex justify-center absolute top-[-8rem] left-0">
+          <div className="absolute left-0 top-[-8rem] flex w-full justify-center">
             <div className="flex flex-col items-center justify-center">
               <div
                 onClick={() => handleClickMenuItem("budget/create")}
-                className="bg-[#FED049] cursor-pointer rounded-full w-12 h-12 p-3"
+                className="h-14 w-14 cursor-pointer rounded-full bg-[#FED049] p-3"
               >
                 <img
                   src={budget}
-                  className="w-full h-full object-contain _onclickAnimate"
+                  className="_onclickAnimate h-full w-full object-contain"
                   alt=""
                 />
               </div>
               <div className="flex items-center gap-16">
                 <div
                   onClick={() => handleClickMenuItem("income/create")}
-                  className="bg-[#5DEBD7] cursor-pointer rounded-full w-12 h-12 p-2"
+                  className="h-14 w-14 cursor-pointer rounded-full bg-[#5DEBD7] p-2"
                 >
                   <img
                     src={income}
-                    className="w-full h-full object-contain _onclickAnimate"
+                    className="_onclickAnimate h-full w-full object-contain"
                     alt=""
                   />
                 </div>
                 <div
                   onClick={() => handleClickMenuItem("expense/create")}
-                  className="bg-[#FF6363] cursor-pointer rounded-full w-12 h-12 p-2"
+                  className="h-14 w-14 cursor-pointer rounded-full bg-[#FF6363] p-2"
                 >
                   <img
                     src={expense}
-                    className="w-full h-full object-contain _onclickAnimate"
+                    className="_onclickAnimate h-full w-full object-contain"
                     alt=""
                   />
                 </div>
@@ -93,9 +96,9 @@ const BottomBar = () => {
             onClick={() => setIsOpen(false)}
             to={item.path}
             key={item.id}
-            className={`${
+            className={`p-1 ${
               pathname === item.path &&
-              "text-white scale-125 transition duration-300"
+              "bg-black rounded-md text-white transition duration-300"
             }`}
           >
             <li className="text-3xl" key={item.id}>

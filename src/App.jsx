@@ -42,7 +42,7 @@ const App = () => {
           },
         }}
       >
-        <main className="mx-auto flex h-screen max-w-3xl font-titilliumWeb">
+        <main className="mx-auto flex h-full max-w-3xl pb-20 font-titilliumWeb">
           <Routes>
             {/* public routes */}
             <Route path="/sign-in" element={<SignInPage />} />

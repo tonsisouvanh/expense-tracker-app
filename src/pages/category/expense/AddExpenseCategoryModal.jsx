@@ -1,6 +1,5 @@
 import { Button, Input, Modal } from "antd";
-import React, { useState } from "react";
-import { FaDeaf } from "react-icons/fa";
+import { useState } from "react";
 import Icon from "../../../components/Icon";
 import useExpenseCategory from "../../../hooks/useExpenseCategory";
 

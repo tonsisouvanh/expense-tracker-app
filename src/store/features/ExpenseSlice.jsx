@@ -3,13 +3,13 @@ import supabase from "../../lib/supabase";
 import { formatDateString } from "../../utils";
 import { notification } from "antd";
 
-// Fetch incomes
-export const fetchIncomes = createAsyncThunk(
-  "incomes/fetchIncomes",
+// Fetch expenses
+export const fetchExpenses = createAsyncThunk(
+  "expenses/fetchExpenses",
   async (userId, { rejectWithValue }) => {
     try {
       const { data, error } = await supabase
-        .from("incomes")
+        .from("expenses")
         .select("*")
         .match({ user_id: userId, is_deleted: false });
       if (error) throw error;
@@ -20,9 +20,9 @@ export const fetchIncomes = createAsyncThunk(
   },
 );
 
-// Fetch income by budget period
-export const fetchIncomesByBudgetPeriod = createAsyncThunk(
-  "incomes/fetchIncomesByBudgetPeriod",
+// Fetch expense by budget period
+export const fetchExpensesByBudgetPeriod = createAsyncThunk(
+  "expenses/fetchExpensesByBudgetPeriod",
   async (userId, { rejectWithValue }) => {
     try {
       const currentDate = formatDateString(
@@ -43,7 +43,7 @@ export const fetchIncomesByBudgetPeriod = createAsyncThunk(
       const startDate = budgetData[0].start_date;
       const endDate = budgetData[0].end_date;
       const { data, error } = await supabase
-        .from("incomes")
+        .from("expenses")
         .select(`*,category:categories(*)`)
         .eq("user_id", userId)
         .eq("is_deleted", false)
@@ -58,48 +58,46 @@ export const fetchIncomesByBudgetPeriod = createAsyncThunk(
   },
 );
 
-//TODO: check if state is storing correctly after adding income
-// Add income
-export const addIncome = createAsyncThunk(
-  "incomes/addIncome",
-  async (income, { getState, rejectWithValue }) => {
+// Add expense
+export const addExpense = createAsyncThunk(
+  "expenses/addExpense",
+  async (expense, { getState, rejectWithValue }) => {
     const { auth } = getState();
     const formatData = {
       user_id: auth.user.userId,
-      category_id: income.category.id,
-      budget_id: income.budget_id,
-      amount: income.amount,
+      category_id: expense.category.id,
+      budget_id: expense.budget_id,
+      amount: expense.amount,
       transaction_date: formatDateString(
-        income.transaction_date,
+        expense.transaction_date,
         "DD-MM-YYYY",
         "YYYY-MM-DD",
       ),
-      created_at: new Date().toISOString(),
     };
     try {
       const { error } = await supabase
-        .from("incomes")
+        .from("expenses")
         .insert({ ...formatData })
         .single();
       if (error) throw error;
-      notification.success({ description: "Income added successfully" });
+      notification.success({ description: "Expense added successfully" });
       return formatData;
     } catch (error) {
-      notification.error({ description: error.message });
+      notification.error({ description: error.message || "Something went wrong"});
       return rejectWithValue(error.message);
     }
   },
 );
 
-// Update income
-export const updateIncome = createAsyncThunk(
-  "incomes/updateIncome",
-  async (income, { rejectWithValue }) => {
+// Update expense
+export const updateExpense = createAsyncThunk(
+  "expenses/updateExpense",
+  async (expense, { rejectWithValue }) => {
     try {
       const { data, error } = await supabase
-        .from("incomes")
-        .update(income)
-        .eq("id", income.id)
+        .from("expenses")
+        .update(expense)
+        .eq("id", expense.id)
         .single();
       if (error) throw error;
       return data;
@@ -109,13 +107,13 @@ export const updateIncome = createAsyncThunk(
   },
 );
 
-// Delete income
-export const deleteIncome = createAsyncThunk(
-  "incomes/deleteIncome",
+// Delete expense
+export const deleteExpense = createAsyncThunk(
+  "expenses/deleteExpense",
   async (id, { rejectWithValue }) => {
     try {
       const { data, error } = await supabase
-        .from("incomes")
+        .from("expenses")
         .delete()
         .eq("id", id)
         .single();
@@ -128,84 +126,86 @@ export const deleteIncome = createAsyncThunk(
 );
 
 const initialState = {
-  incomes: [],
-  totalIncome: 0,
+  expenses: [],
+  totalExpense: 0,
   status: "idle",
   error: null,
 };
 
-const incomeSlice = createSlice({
-  name: "income",
+const expenseSlice = createSlice({
+  name: "expense",
   initialState,
   reducers: {
-    resetIncomeState: (state) => {
+    resetExpenseState: (state) => {
       state.status = "idle";
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
-      // Fetch incomes
-      .addCase(fetchIncomesByBudgetPeriod.pending, (state) => {
+      // Fetch expenses
+      .addCase(fetchExpensesByBudgetPeriod.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchIncomesByBudgetPeriod.fulfilled, (state, action) => {
+      .addCase(fetchExpensesByBudgetPeriod.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.incomes = [...action.payload];
-        state.totalIncome = action.payload.reduce(
-          (total, income) => total + income.amount,
+        state.expenses = [...action.payload];
+        state.totalExpense = action.payload.reduce(
+          (total, expense) => total + expense.amount,
           0,
         );
       })
-      .addCase(fetchIncomesByBudgetPeriod.rejected, (state, action) => {
+      .addCase(fetchExpensesByBudgetPeriod.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      // Add income
-      .addCase(addIncome.pending, (state) => {
+      // Add expense
+      .addCase(addExpense.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addIncome.fulfilled, (state, action) => {
+      .addCase(addExpense.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // state.incomes.push(action.payload);
-        state.totalIncome += action.payload.amount;
+        // state.expenses.push(action.payload);
+        state.totalExpense += action.payload.amount;
       })
-      .addCase(addIncome.rejected, (state, action) => {
+      .addCase(addExpense.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      // Update income
-      .addCase(updateIncome.pending, (state) => {
+      // Update expense
+      .addCase(updateExpense.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateIncome.fulfilled, (state, action) => {
+      .addCase(updateExpense.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const index = state.incomes.findIndex(
-          (income) => income.id === action.payload.id,
+        const index = state.expenses.findIndex(
+          (expense) => expense.id === action.payload.id,
         );
         if (index !== -1) {
-          state.incomes[index] = action.payload;
+          state.expenses[index] = action.payload;
         }
       })
-      .addCase(updateIncome.rejected, (state, action) => {
+      .addCase(updateExpense.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
-      // Delete income
-      .addCase(deleteIncome.pending, (state) => {
+      // Delete expense
+      .addCase(deleteExpense.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(deleteIncome.fulfilled, (state, action) => {
+      .addCase(deleteExpense.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.incomes = state.incomes.filter(
-          (income) => income.id !== action.payload.id,
+        state.expenses = state.expenses.filter(
+          (expense) => expense.id !== action.payload.id,
         );
       })
-      .addCase(deleteIncome.rejected, (state, action) => {
+      .addCase(deleteExpense.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
   },
 });
-export const { resetIncomeState } = incomeSlice.actions;
-export default incomeSlice.reducer;
+
+export const { resetExpenseState } = expenseSlice.actions;
+
+export default expenseSlice.reducer;
