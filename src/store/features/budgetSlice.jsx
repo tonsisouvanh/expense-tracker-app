@@ -118,17 +118,15 @@ const initialState = {
   error: null,
 };
 
-const budgetReducers = {
-  resetStatus: (state) => {
-    state.status = "idle";
-    state.error = null;
-  },
-};
-
 const BudgetSlice = createSlice({
   name: "budget",
   initialState,
-  reducers: budgetReducers,
+  reducers: {
+    resetStatus: (state) => {
+      state.status = "idle";
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBudgets.pending, (state) => {
@@ -198,6 +196,6 @@ const BudgetSlice = createSlice({
   },
 });
 
-export const { resetStatus } = budgetReducers;
+export const { resetStatus } = BudgetSlice.actions;
 
 export default BudgetSlice.reducer;

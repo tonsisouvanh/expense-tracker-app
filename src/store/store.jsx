@@ -7,8 +7,7 @@ import expenseReducer, {
   fetchExpensesByBudgetPeriod,
 } from "./features/ExpenseSlice";
 import categoryReducer, { fetchCategories } from "./features/CategorySlice";
-import budgetsReducer, { fetchActiveBudget } from "./features/BudgetSlice";
-
+import budgetReducer, { fetchActiveBudget } from "./features/BudgetSlice";
 const user = JSON.parse(localStorage.getItem("auth_info"));
 
 const prefetchData = async () => {
@@ -21,7 +20,7 @@ const prefetchData = async () => {
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    budget: budgetsReducer,
+    budget: budgetReducer,
     category: categoryReducer,
     income: incomeReducer,
     expense: expenseReducer,
