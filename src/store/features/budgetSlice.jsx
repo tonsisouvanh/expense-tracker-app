@@ -118,7 +118,7 @@ const initialState = {
   error: null,
 };
 
-const BudgetSlice = createSlice({
+const budgetSlice = createSlice({
   name: "budget",
   initialState,
   reducers: {
@@ -196,6 +196,6 @@ const BudgetSlice = createSlice({
   },
 });
 
-export const { resetStatus } = BudgetSlice.actions;
+export const { resetStatus } = budgetSlice.actions;
 
-export default BudgetSlice.reducer;
+export default budgetSlice.reducer;
