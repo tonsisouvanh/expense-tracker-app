@@ -1,11 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import supabase from "../../lib/supabase";
+import supabase from "../lib/supabase";
 
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase.from("categories").select().eq("is_deleted", false);
+      const { data, error } = await supabase
+        .from("categories")
+        .select()
+        .eq("is_deleted", false);
       if (error) throw error;
       return data;
     } catch (error) {
@@ -13,7 +16,6 @@ export const fetchCategories = createAsyncThunk(
     }
   },
 );
-
 
 export const createCategory = createAsyncThunk(
   "categories/createCategory",
@@ -76,7 +78,7 @@ const initialState = {
   error: null,
 };
 
-const categorySlice = createSlice({
+const CategorySlice = createSlice({
   name: "category",
   initialState,
   reducers: {
@@ -141,6 +143,6 @@ const categorySlice = createSlice({
   },
 });
 
-export const { resetStatus } = categorySlice.actions;
+export const { resetStatus } = CategorySlice.actions;
 
-export default categorySlice.reducer;
+export default CategorySlice.reducer;

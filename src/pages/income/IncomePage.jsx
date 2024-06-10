@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import useIncomeCategory from "../../hooks/useIncomeCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { addIncome, resetIncomeStatus } from "../../store/features/IncomeSlice";
+import { addIncome, resetIncomeStatus } from "../../features/IncomeSlice";
 import dayjs from "dayjs";
 import AmountInput from "../../components/input/AmountInput";
 

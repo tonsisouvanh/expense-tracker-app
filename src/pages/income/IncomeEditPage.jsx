@@ -10,7 +10,7 @@ import {
   deleteIncome,
   resetIncomeStatus,
   updateIncome,
-} from "../../store/features/IncomeSlice";
+} from "../../features/IncomeSlice";
 import dayjs from "dayjs";
 import Spinner from "../../components/Spinner";
 import useIncomeDetail from "../../hooks/income/useIncomeDetail";

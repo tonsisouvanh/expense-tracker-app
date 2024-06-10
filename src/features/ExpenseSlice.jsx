@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import supabase from "../../lib/supabase";
-import { formatDateString } from "../../utils";
+import supabase from "../lib/supabase";
+import { formatDateString } from "../utils";
 import { notification } from "antd";
 
 // Fetch exepense by id
@@ -171,7 +171,7 @@ const initialState = {
   error: null,
 };
 
-const expenseSlice = createSlice({
+const ExpenseSlice = createSlice({
   name: "expense",
   initialState,
   reducers: {
@@ -258,6 +258,6 @@ const expenseSlice = createSlice({
   },
 });
 
-export const { resetExpenseStatus } = expenseSlice.actions;
+export const { resetExpenseStatus } = ExpenseSlice.actions;
 
-export default expenseSlice.reducer;
+export default ExpenseSlice.reducer;

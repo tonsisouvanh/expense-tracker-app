@@ -10,7 +10,7 @@ import {
   deleteExpense,
   resetExpenseStatus,
   updateExpense,
-} from "../../store/features/ExpenseSlice";
+} from "../../features/ExpenseSlice";
 import dayjs from "dayjs";
 import Spinner from "../../components/Spinner";
 import { FaSave } from "react-icons/fa";

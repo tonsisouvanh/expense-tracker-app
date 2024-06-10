@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import supabase from "../../lib/supabase";
-import { formatDateString } from "../../utils";
+import supabase from "../lib/supabase";
+import { formatDateString } from "../utils";
 import { notification } from "antd";
 
 export const fetchIncomeById = createAsyncThunk(
@@ -171,7 +171,7 @@ const initialState = {
   error: null,
 };
 
-const incomeSlice = createSlice({
+const IncomeSlice = createSlice({
   name: "income",
   initialState,
   reducers: {
@@ -263,5 +263,5 @@ const incomeSlice = createSlice({
       });
   },
 });
-export const { resetIncomeStatus } = incomeSlice.actions;
-export default incomeSlice.reducer;
+export const { resetIncomeStatus } = IncomeSlice.actions;
+export default IncomeSlice.reducer;

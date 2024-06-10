@@ -3,7 +3,7 @@ import Topbar from "../../components/topbar/Topbar";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { createBudget } from "../../store/features/BudgetSlice";
+import { createBudget } from "../../features/BudgetSlice";
 import { formatDateString } from "../../utils";
 import supabase from "../../lib/supabase";
 import { useNavigate } from "react-router-dom";

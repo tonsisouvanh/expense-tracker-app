@@ -4,10 +4,10 @@ import useExpenseCategory from "../../hooks/useExpenseCategory";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
-import { fetchExpensesByBudgetPeriod } from "../../store/features/ExpenseSlice";
-import { fetchIncomesByBudgetPeriod } from "../../store/features/IncomeSlice";
 import Transaction from "./Transaction";
 import { formatDateString } from "../../utils";
+import { fetchExpensesByBudgetPeriod } from "../../features/ExpenseSlice";
+import { fetchIncomesByBudgetPeriod } from "../../features/IncomeSlice";
 const TransactionList = () => {
   const dispatch = useDispatch();
   const { incomeIconMapping } = useIncomeCategory();

@@ -6,10 +6,7 @@ import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import useExpenseCategory from "../../hooks/useExpenseCategory";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addExpense,
-  resetExpenseStatus,
-} from "../../store/features/ExpenseSlice";
+import { addExpense, resetExpenseStatus } from "../../features/ExpenseSlice";
 import dayjs from "dayjs";
 import AmountInput from "../../components/input/AmountInput";
 

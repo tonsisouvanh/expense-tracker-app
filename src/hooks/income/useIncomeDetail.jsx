@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { fetchIncomeById } from "../../store/features/IncomeSlice";
+import { fetchIncomeById } from "../../features/IncomeSlice";
 import { useEffect } from "react";
 
 const useIncomeDetail = (id) => {

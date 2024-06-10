@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { fetchExpenseById } from "../../store/features/ExpenseSlice";
+import { fetchExpenseById } from "../../features/ExpenseSlice";
 import { useEffect } from "react";
 
 const useExpenseDetail = (id) => {
