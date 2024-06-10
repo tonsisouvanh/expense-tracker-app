@@ -11,6 +11,8 @@ import {
   SignInPage,
   UserProfilePage,
   EditBudgetPage,
+  IncomeEditPage,
+  ExpenseEditPage,
 } from "./pages";
 import Spinner from "./components/Spinner";
 import Test from "./pages/Test";
@@ -20,7 +22,7 @@ import { initializeAuthListener } from "./store/features/auth/authSlice";
 
 const App = () => {
   const { defaultAlgorithm, darkAlgorithm } = theme;
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,10 +85,26 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="income/edit/:id"
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <IncomeEditPage />
+                    </Suspense>
+                  }
+                />
+                <Route
                   path="expense/create"
                   element={
                     <Suspense fallback={<Spinner />}>
                       <ExpensePage />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="expense/edit/:id"
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <ExpenseEditPage />
                     </Suspense>
                   }
                 />

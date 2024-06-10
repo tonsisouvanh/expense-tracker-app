@@ -3,6 +3,25 @@ import supabase from "../../lib/supabase";
 import { formatDateString } from "../../utils";
 import { notification } from "antd";
 
+// Fetch exepense by id
+export const fetchExpenseById = createAsyncThunk(
+  "expenses/fetchExpenseById",
+  async (id, { rejectWithValue }) => {
+    const expenseId = Number(id);
+    try {
+      const { data, error } = await supabase
+        .from("expenses")
+        .select(`*,category:categories(*)`)
+        .eq("id", expenseId)
+        .single();
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 // Fetch expenses
 export const fetchExpenses = createAsyncThunk(
   "expenses/fetchExpenses",
@@ -83,7 +102,9 @@ export const addExpense = createAsyncThunk(
       notification.success({ description: "Expense added successfully" });
       return formatData;
     } catch (error) {
-      notification.error({ description: error.message || "Something went wrong"});
+      notification.error({
+        description: error.message || "Something went wrong",
+      });
       return rejectWithValue(error.message);
     }
   },
@@ -93,15 +114,29 @@ export const addExpense = createAsyncThunk(
 export const updateExpense = createAsyncThunk(
   "expenses/updateExpense",
   async (expense, { rejectWithValue }) => {
+    const expenseId = Number(expense.expenseId);
     try {
-      const { data, error } = await supabase
+      const formatedData = {
+        amount: expense.amount,
+        category_id: expense.category.id,
+        transaction_date: formatDateString(
+          expense.transaction_date,
+          "DD-MM-YYYY",
+          "YYYY-MM-DD",
+        ),
+        description: expense.description,
+        budget_id: expense.budget_id,
+      };
+      const { error } = await supabase
         .from("expenses")
-        .update(expense)
-        .eq("id", expense.id)
+        .update({ ...formatedData })
+        .eq("id", expenseId)
         .single();
       if (error) throw error;
-      return data;
+      notification.success({ description: "Expense updated successfully" });
+      return;
     } catch (error) {
+      notification.error({ description: error.message });
       return rejectWithValue(error.message);
     }
   },
@@ -112,21 +147,25 @@ export const deleteExpense = createAsyncThunk(
   "expenses/deleteExpense",
   async (id, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("expenses")
         .delete()
         .eq("id", id)
         .single();
-      if (error) throw error;
-      return data;
+      if (error) {
+        notification.error({ description: error });
+        throw error;
+      }
+      notification.success({ description: "Expense deleted successfully" });
+      return { id };
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
 );
-
 const initialState = {
   expenses: [],
+  expenseDetail: null,
   totalExpense: 0,
   status: "idle",
   error: null,
@@ -136,7 +175,7 @@ const expenseSlice = createSlice({
   name: "expense",
   initialState,
   reducers: {
-    resetExpenseState: (state) => {
+    resetExpenseStatus: (state) => {
       state.status = "idle";
       state.error = null;
     },
@@ -159,6 +198,19 @@ const expenseSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
+      // Fetch expense by id
+      .addCase(fetchExpenseById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchExpenseById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.expenseDetail = { ...action.payload };
+      })
+      .addCase(fetchExpenseById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       // Add expense
       .addCase(addExpense.pending, (state) => {
         state.status = "loading";
@@ -176,14 +228,14 @@ const expenseSlice = createSlice({
       .addCase(updateExpense.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateExpense.fulfilled, (state, action) => {
+      .addCase(updateExpense.fulfilled, (state) => {
         state.status = "succeeded";
-        const index = state.expenses.findIndex(
-          (expense) => expense.id === action.payload.id,
-        );
-        if (index !== -1) {
-          state.expenses[index] = action.payload;
-        }
+        // const index = state.expenses.findIndex(
+        //   (expense) => expense.id === action.payload.id,
+        // );
+        // if (index !== -1) {
+        //   state.expenses[index] = action.payload;
+        // }
       })
       .addCase(updateExpense.rejected, (state, action) => {
         state.status = "failed";
@@ -206,6 +258,6 @@ const expenseSlice = createSlice({
   },
 });
 
-export const { resetExpenseState } = expenseSlice.actions;
+export const { resetExpenseStatus } = expenseSlice.actions;
 
 export default expenseSlice.reducer;

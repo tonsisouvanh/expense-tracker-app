@@ -5,6 +5,7 @@ export const formatDateString = (
   originFormat = "MM-DD-YYYY",
   newFormat = "DD-MM-YYYY",
 ) => {
+  if(dateString === null || dateString === undefined) return "DD-MM-YYYY";
   const originalDate = moment(dateString, originFormat);
 
   const newDateString = originalDate.format(newFormat);

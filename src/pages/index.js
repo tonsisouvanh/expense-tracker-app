@@ -8,3 +8,6 @@ export const ExpensePage = React.lazy(() => import("./expense/ExpensePage"));
 export const CategoryPage = React.lazy(() => import("./category/CategoryPage"));
 export const SignInPage = React.lazy(() => import("./SignInPage"));
 export const UserProfilePage = React.lazy(() => import("./profile/UserProfilePage"));
+
+export const IncomeEditPage = React.lazy(() => import("./income/IncomeEditPage"));
+export const ExpenseEditPage = React.lazy(() => import("./expense/ExpenseEditPage"));

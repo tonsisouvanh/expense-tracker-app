@@ -3,6 +3,24 @@ import supabase from "../../lib/supabase";
 import { formatDateString } from "../../utils";
 import { notification } from "antd";
 
+export const fetchIncomeById = createAsyncThunk(
+  "incomes/fetchIncomeById",
+  async (id, { rejectWithValue }) => {
+    const incomeId = Number(id);
+    try {
+      const { data, error } = await supabase
+        .from("incomes")
+        .select(`*,category:categories(*)`)
+        .eq("id", incomeId)
+        .single();
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 // Fetch incomes
 export const fetchIncomes = createAsyncThunk(
   "incomes/fetchIncomes",
@@ -95,15 +113,29 @@ export const addIncome = createAsyncThunk(
 export const updateIncome = createAsyncThunk(
   "incomes/updateIncome",
   async (income, { rejectWithValue }) => {
+    const incomeId = Number(income.incomeId);
     try {
-      const { data, error } = await supabase
+      const formatedData = {
+        amount: income.amount,
+        category_id: income.category.id,
+        transaction_date: formatDateString(
+          income.transaction_date,
+          "DD-MM-YYYY",
+          "YYYY-MM-DD",
+        ),
+        description: income.description,
+        budget_id: income.budget_id,
+      };
+      const { error } = await supabase
         .from("incomes")
-        .update(income)
-        .eq("id", income.id)
+        .update({ ...formatedData })
+        .eq("id", incomeId)
         .single();
       if (error) throw error;
-      return data;
+      notification.success({ description: "Income updated successfully" });
+      return;
     } catch (error) {
+      notification.error({ description: error.message });
       return rejectWithValue(error.message);
     }
   },
@@ -114,13 +146,17 @@ export const deleteIncome = createAsyncThunk(
   "incomes/deleteIncome",
   async (id, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("incomes")
         .delete()
         .eq("id", id)
         .single();
-      if (error) throw error;
-      return data;
+      if (error) {
+        notification.error({ description: error });
+        throw error;
+      }
+      notification.success({ description: "Income deleted successfully" });
+      return { id };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -129,6 +165,7 @@ export const deleteIncome = createAsyncThunk(
 
 const initialState = {
   incomes: [],
+  incomeDetail: null,
   totalIncome: 0,
   status: "idle",
   error: null,
@@ -138,10 +175,10 @@ const incomeSlice = createSlice({
   name: "income",
   initialState,
   reducers: {
-    resetIncomeState: (state) => {
+    resetIncomeStatus: (state) => {
       state.status = "idle";
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -161,7 +198,22 @@ const incomeSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
+      // Fetch income by id
+      .addCase(fetchIncomeById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchIncomeById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.incomeDetail = { ...action.payload };
+      })
+      .addCase(fetchIncomeById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+
       // Add income
+      // TODO: handle adding income to state
       .addCase(addIncome.pending, (state) => {
         state.status = "loading";
       })
@@ -174,24 +226,28 @@ const incomeSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
       // Update income
+      // TODO: handle updating income in state
       .addCase(updateIncome.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateIncome.fulfilled, (state, action) => {
+      .addCase(updateIncome.fulfilled, (state) => {
         state.status = "succeeded";
-        const index = state.incomes.findIndex(
-          (income) => income.id === action.payload.id,
-        );
-        if (index !== -1) {
-          state.incomes[index] = action.payload;
-        }
+        // const index = state.incomes.findIndex(
+        //   (income) => income.id === action.payload.id,
+        // );
+        // if (index !== -1) {
+        //   state.incomes[index] = action.payload;
+        // }
       })
       .addCase(updateIncome.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
+
       // Delete income
+      // TODO: handle deleting income in state
       .addCase(deleteIncome.pending, (state) => {
         state.status = "loading";
       })
@@ -207,5 +263,5 @@ const incomeSlice = createSlice({
       });
   },
 });
-export const { resetIncomeState } = incomeSlice.actions;
+export const { resetIncomeStatus } = incomeSlice.actions;
 export default incomeSlice.reducer;

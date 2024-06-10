@@ -1,24 +1,24 @@
-import { Avatar, Select } from "antd";
+import { Avatar } from "antd";
 import { expense, income } from "../../assets";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { formatDateString, formatPrice } from "../../utils";
 
-const months = [
-  { value: "january", label: "January" },
-  { value: "february", label: "February" },
-  { value: "march", label: "March" },
-  { value: "april", label: "April" },
-  { value: "may", label: "May" },
-  { value: "june", label: "June" },
-  { value: "july", label: "July" },
-  { value: "august", label: "August" },
-  { value: "september", label: "September" },
-  { value: "october", label: "October" },
-  { value: "november", label: "November" },
-  { value: "december", label: "December" },
-];
+// const months = [
+//   { value: "january", label: "January" },
+//   { value: "february", label: "February" },
+//   { value: "march", label: "March" },
+//   { value: "april", label: "April" },
+//   { value: "may", label: "May" },
+//   { value: "june", label: "June" },
+//   { value: "july", label: "July" },
+//   { value: "august", label: "August" },
+//   { value: "september", label: "September" },
+//   { value: "october", label: "October" },
+//   { value: "november", label: "November" },
+//   { value: "december", label: "December" },
+// ];
 
 const HomeTopbar = () => {
   const { activeBudget } = useSelector((state) => state.budget);
@@ -52,7 +52,7 @@ const HomeTopbar = () => {
         </div> */}
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex flex-col items-center">
-            <h2 className="">Budget</h2>
+            <h2 className="font-bold">Budget</h2>
             <span className="text-2xl font-bold">
               {formatPrice(activeBudget?.amount) || 0}
             </span>
@@ -74,18 +74,18 @@ const HomeTopbar = () => {
             </span>
           </div>
         </div>
-        <div className="grid text-sm w-full grid-cols-2 gap-3">
+        <div className="grid w-full grid-cols-2 gap-3 text-sm">
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-3 text-white">
-            <div className="w-[60px] min-w-[60px] rounded-full bg-white px-4 py-2">
+            <div className="w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
               <img src={income} className="h-full w-full object-cover" alt="" />
             </div>
             <div>
-              <h3>Income</h3>
+              <h3 className="text-green-400">Income</h3>
               <span>+{formatPrice(totalIncome)}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-3 text-white">
-            <div className="w-[60px] min-w-[60px] rounded-full bg-white px-4 py-2">
+            <div className="w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
               <img
                 src={expense}
                 className="h-full w-full object-cover"
@@ -93,12 +93,13 @@ const HomeTopbar = () => {
               />
             </div>
             <div>
-              <h3>Expense</h3>
+              <h3 className="text-red-500">Expense</h3>
               <span>-{formatPrice(totalExpense)}</span>
             </div>
           </div>
-          <p className="text-sm">
-            Remaining: <span>{formatPrice(remaining | 0)}</span>
+          <p className="text-lg">
+            Remaining:{" "}
+            <span className="font-bold">{formatPrice(remaining | 0)}</span>
           </p>
         </div>
       </article>

@@ -1,19 +1,15 @@
 import { Button } from "antd";
-import { FaPencil, FaTrash } from "react-icons/fa6";
 import { useState } from "react";
 import useExpenseCategory from "../../../hooks/useExpenseCategory";
 import AddExpenseCategoryModal from "./AddExpenseCategoryModal";
 import EditExpenseCategoryModal from "./EditExpenseCategoryModal";
-import Icon from "../../../components/Icon";
 
 const CategoryExpenseTab = () => {
-  const { expenseIconMapping } = useExpenseCategory();
 
   const [editCategory, setEditCategory] = useState(null);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-// TODO: fix this
   const handleEditOpen = (item) => {
     setIsEditOpen(true);
     setEditCategory({ ...item });
