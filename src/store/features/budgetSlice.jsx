@@ -90,6 +90,7 @@ export const updateBudget = createAsyncThunk(
         throw new Error(error.message);
       }
       notification.success({ description: "Budget updated successfully" });
+      
     } catch (error) {
       notification.error({ description: "Failed to update budget" });
       console.log(error);
