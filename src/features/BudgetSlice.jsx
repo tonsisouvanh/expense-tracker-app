@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import supabase from "../../lib/supabase";
 import { notification } from "antd";
-import { formatDateString } from "../../utils";
+import { formatDateString } from "../utils";
+import supabase from "../lib/supabase";
 
 export const fetchActiveBudget = createAsyncThunk(
   "budgets/fetchActiveBudget",
@@ -90,7 +90,6 @@ export const updateBudget = createAsyncThunk(
         throw new Error(error.message);
       }
       notification.success({ description: "Budget updated successfully" });
-      
     } catch (error) {
       notification.error({ description: "Failed to update budget" });
       console.log(error);

@@ -7,7 +7,7 @@ import expenseReducer, {
   fetchExpensesByBudgetPeriod,
 } from "./features/ExpenseSlice";
 import categoryReducer, { fetchCategories } from "./features/CategorySlice";
-import budgetReducer, { fetchActiveBudget } from "./features/BudgetSlice";
+import budgetReducer, { fetchActiveBudget } from "../features/BudgetSlice.jsx";
 const user = JSON.parse(localStorage.getItem("auth_info"));
 
 const prefetchData = async () => {
