@@ -10,11 +10,14 @@ import { addExpense, resetExpenseStatus } from "../../features/ExpenseSlice";
 import dayjs from "dayjs";
 import AmountInput from "../../components/input/AmountInput";
 import toast from "react-hot-toast";
+import { FaCalculator } from "react-icons/fa";
+import CalculatorModal from "../../components/CalculatorModal";
 
 const ExpensePage = () => {
   const [suggestAmount, setSuggestAmount] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isOpenCalModal, setIsOpenCalModal] = useState(false);
 
   const { activeBudget } = useSelector((state) => state.budget);
   const { categories } = useSelector((state) => state.category);
@@ -103,6 +106,7 @@ const ExpensePage = () => {
 
   return (
     <section className="flex w-full flex-col justify-between">
+      <CalculatorModal isOpen={isOpenCalModal} setIsOpen={setIsOpenCalModal} />
       <Topbar title="Expense" containerClassName="px-3" />
       <form className="">
         <div className="relative flex flex-col items-center gap-10">
@@ -152,14 +156,22 @@ const ExpensePage = () => {
             size="large"
             className="bg-transparent"
           />
-          <Button
-            onClick={handleSubmit}
-            loading={status === "loading"}
-            size="large"
-            className="flex items-center justify-center bg-primary px-28 py-6 font-semibold text-secondary"
-          >
-            SAVE
-          </Button>
+          <div className="flex w-full items-center gap-5">
+            <Button
+              onClick={handleSubmit}
+              loading={status === "loading"}
+              size="large"
+              className="flex w-full items-center justify-center bg-primary px-2 py-6 font-semibold text-secondary"
+            >
+              SAVE
+            </Button>
+            <Button
+              onClick={() => setIsOpenCalModal(true)}
+              size="large"
+              className="flex w-full items-center justify-center bg-primary px-2 py-6 font-semibold text-secondary"
+              icon={<FaCalculator size={20} />}
+            ></Button>
+          </div>
         </div>
       </form>
     </section>

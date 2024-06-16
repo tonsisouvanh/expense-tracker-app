@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { formatDateString } from "../utils";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
-
+// TODO: Handle state add,update,delete properly
 export const fetchActiveBudget = createAsyncThunk(
   "budgets/fetchActiveBudget",
   async () => {
