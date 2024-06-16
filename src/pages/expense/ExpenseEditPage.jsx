@@ -1,4 +1,4 @@
-import { Button, DatePicker, Dropdown, Space, notification } from "antd";
+import { Button, DatePicker, Dropdown, Space } from "antd";
 import Topbar from "../../components/topbar/Topbar";
 import React, { useEffect, useState } from "react";
 import { FaCaretDown, FaCheck, FaTrash } from "react-icons/fa6";
@@ -16,6 +16,7 @@ import Spinner from "../../components/Spinner";
 import { FaSave } from "react-icons/fa";
 import useExpenseDetail from "../../hooks/expense/useExpenseDetail";
 import AmountInput from "../../components/input/AmountInput";
+import toast from "react-hot-toast";
 const ExpenseEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const ExpenseEditPage = () => {
 
   const handleSubmit = () => {
     if (!selectedCate.id || !selectedDate || amount === 0) {
-      notification.error({ description: "Please fill in all fields" });
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -101,10 +102,10 @@ const ExpenseEditPage = () => {
   };
   const handleDelete = (expenseId) => {
     if (!expenseId) {
-      notification.error({ description: "No expense id" });
+      toast.error("No expense id");
       return;
     }
-    dispatch(deleteExpense({expenseId,amount}));
+    dispatch(deleteExpense({ expenseId, amount }));
 
     if (status === "succeeded") {
       resetForm();

@@ -1,4 +1,4 @@
-import { Button, DatePicker, Dropdown, Space, notification } from "antd";
+import { Button, DatePicker, Dropdown, Space } from "antd";
 import Topbar from "../../components/topbar/Topbar";
 import React, { useEffect, useState } from "react";
 import { FaCaretDown, FaCheck, FaTrash } from "react-icons/fa6";
@@ -16,6 +16,7 @@ import Spinner from "../../components/Spinner";
 import useIncomeDetail from "../../hooks/income/useIncomeDetail";
 import { FaSave } from "react-icons/fa";
 import AmountInput from "../../components/input/AmountInput";
+import toast from "react-hot-toast";
 const IncomeEditPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const IncomeEditPage = () => {
 
   const handleSubmit = () => {
     if (!selectedCate.id || !selectedDate || amount === 0) {
-      notification.error({ description: "Please fill in all fields" });
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -102,11 +103,11 @@ const IncomeEditPage = () => {
 
   const handleDelete = (incomeId) => {
     if (!incomeId) {
-      notification.error({ description: "No income id" });
+      toast.error("No income id");
       return;
     }
 
-    dispatch(deleteIncome({incomeId, amount}));
+    dispatch(deleteIncome({ incomeId, amount }));
 
     if (status === "succeeded") {
       resetForm();

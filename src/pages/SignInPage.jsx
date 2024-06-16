@@ -1,4 +1,5 @@
-import { Button, Checkbox, Form, Input, notification } from "antd";
+import { Button, Checkbox, Form, Input } from "antd";
+import toast from "react-hot-toast";
 
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../store/features/auth/authSlice";
@@ -12,9 +13,7 @@ const SignInPage = () => {
     dispatch(signIn({ email: values.email, password: values.password }));
   };
   const onFinishFailed = () => {
-    notification.warning({
-      description: "Please input email and password",
-    });
+    toast.warning("Please input email and password");
   };
 
   useEffect(() => {
@@ -22,14 +21,12 @@ const SignInPage = () => {
       navigate("/");
     }
     if (status === "failed") {
-      notification.error({
-        description: error,
-      });
+      toast.error(error);
     }
   }, [navigate, user, status, error]);
 
   return (
-    <div className="flex justify-center items-center w-full h-screen">
+    <div className="flex h-screen w-full items-center justify-center">
       <Form
         name="auth"
         labelCol={{

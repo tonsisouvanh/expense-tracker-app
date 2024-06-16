@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../lib/supabase";
 import { formatDateString } from "../utils";
-import { notification } from "antd";
+import toast from "react-hot-toast";
 
 // Fetch exepense by id
 export const fetchExpenseById = createAsyncThunk(
@@ -88,6 +88,7 @@ export const addExpense = createAsyncThunk(
       category_id: expense.category.id,
       budget_id: expense.budget_id,
       amount: expense.amount,
+      description: expense.description,
       transaction_date: formatDateString(
         expense.transaction_date,
         "DD-MM-YYYY",
@@ -101,12 +102,10 @@ export const addExpense = createAsyncThunk(
         .single()
         .select(`*,category:categories(*)`);
       if (error) throw error;
-      notification.success({ description: "Expense added successfully" });
+      toast.success("Expense added successfully");
       return data;
     } catch (error) {
-      notification.error({
-        description: error.message || "Something went wrong",
-      });
+      toast.error(`${error.message || "Something went wrong"}`);
       return rejectWithValue(error.message);
     }
   },
@@ -136,10 +135,10 @@ export const updateExpense = createAsyncThunk(
         .single()
         .select(`*,category:categories(*)`);
       if (error) throw error;
-      notification.success({ description: "Expense updated successfully" });
+      toast.success("Expense updated successfully");
       return data;
     } catch (error) {
-      notification.error({ description: error.message });
+      toast.error(error.message);
       return rejectWithValue(error.message);
     }
   },
@@ -156,10 +155,10 @@ export const deleteExpense = createAsyncThunk(
         .eq("id", deletedExpense.expenseId)
         .single();
       if (error) {
-        notification.error({ description: error });
+        toast.error(error);
         throw error;
       }
-      notification.success({ description: "Expense deleted successfully" });
+      toast.success("Expense deleted successfully");
       return { id: deletedExpense.expenseId, amount: deletedExpense.amount };
     } catch (error) {
       return rejectWithValue(error.message);

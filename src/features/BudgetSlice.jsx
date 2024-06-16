@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { notification } from "antd";
 import { formatDateString } from "../utils";
 import supabase from "../lib/supabase";
+import toast from "react-hot-toast";
 
 export const fetchActiveBudget = createAsyncThunk(
   "budgets/fetchActiveBudget",
@@ -54,10 +54,10 @@ export const createBudget = createAsyncThunk(
       if (error) {
         throw new Error(error.message);
       }
-      notification.success({ description: "Budget created successfully" });
+      toast.success("Budget created successfully");
       return data[0];
     } catch (error) {
-      notification.error({ description: "Failed to create budget" });
+      toast.error("Failed to create budget");
       throw new Error(error.message);
     }
   },
@@ -89,9 +89,9 @@ export const updateBudget = createAsyncThunk(
       if (error) {
         throw new Error(error.message);
       }
-      notification.success({ description: "Budget updated successfully" });
+      toast.success("Budget updated successfully");
     } catch (error) {
-      notification.error({ description: "Failed to update budget" });
+      toast.error("Failed to update budget");
       throw new Error(error);
     }
   },

@@ -1,5 +1,5 @@
 // Refactor version
-import { Button, DatePicker, Dropdown, Space, notification } from "antd";
+import { Button, DatePicker, Dropdown, Space } from "antd";
 import Topbar from "../../components/topbar/Topbar";
 import { useState } from "react";
 import { FaCaretDown, FaCheck } from "react-icons/fa6";
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addIncome, resetIncomeStatus } from "../../features/IncomeSlice";
 import dayjs from "dayjs";
 import AmountInput from "../../components/input/AmountInput";
+import toast from "react-hot-toast";
 
 const IncomePage = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const IncomePage = () => {
 
   const handleSubmit = () => {
     if (!selectedCate.id || !selectedDate || amount === 0) {
-      notification.error({ description: "Please fill in all fields" });
+      toast.error("Please fill in all fields");
       return;
     }
 

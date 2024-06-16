@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import supabase from "../lib/supabase";
 import { formatDateString } from "../utils";
-import { notification } from "antd";
+import toast from "react-hot-toast";
 
 export const fetchIncomeById = createAsyncThunk(
   "incomes/fetchIncomeById",
@@ -103,10 +103,10 @@ export const addIncome = createAsyncThunk(
         .single()
         .select(`*,category:categories(*)`);
       if (error) throw error;
-      notification.success({ description: "Income added successfully" });
+      toast.success("Income added successfully");
       return data;
     } catch (error) {
-      notification.error({ description: error.message });
+      toast.error(error.message);
       return rejectWithValue(error.message);
     }
   },
@@ -136,10 +136,10 @@ export const updateIncome = createAsyncThunk(
         .single()
         .select(`*,category:categories(*)`);
       if (error) throw error;
-      notification.success({ description: "Income updated successfully" });
+      toast.success("Income updated successfully");
       return data;
     } catch (error) {
-      notification.error({ description: error.message });
+      toast.error(error.message);
       return rejectWithValue(error.message);
     }
   },
@@ -156,10 +156,10 @@ export const deleteIncome = createAsyncThunk(
         .eq("id", deletedIncome.incomeId)
         .single();
       if (error) {
-        notification.error({ description: error });
+        toast.error(error);
         throw error;
       }
-      notification.success({ description: "Income deleted successfully" });
+      toast.success("Income deleted successfully");
       return { id: deletedIncome.incomeId, amount: deletedIncome.amount };
     } catch (error) {
       return rejectWithValue(error.message);

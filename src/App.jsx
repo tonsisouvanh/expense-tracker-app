@@ -23,6 +23,7 @@ import { fetchActiveBudget } from "./features/BudgetSlice";
 import { fetchCategories } from "./features/CategorySlice";
 import { fetchIncomesByBudgetPeriod } from "./features/IncomeSlice";
 import { fetchExpensesByBudgetPeriod } from "./features/ExpenseSlice";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { defaultAlgorithm, darkAlgorithm } = theme;
@@ -150,7 +151,7 @@ const App = () => {
             </Route>
           </Routes>
 
-          {/* <Toaster /> */}
+          <Toaster />
         </main>
       </ConfigProvider>
     </>
