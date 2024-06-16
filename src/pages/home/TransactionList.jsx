@@ -14,12 +14,9 @@ const TransactionList = () => {
   const { incomes, status: incomeStatus } = useSelector(
     (state) => state.income,
   );
-
-  console.log("🚀 ~ TransactionList ~ incomeStatus:", incomeStatus);
   const { expenses, status: expenseStatus } = useSelector(
     (state) => state.expense,
   );
-  console.log("🚀 ~ TransactionList ~ expenseStatus:", expenseStatus);
 
   const [transactionsByDate, setTransactionsByDate] = useState({});
 

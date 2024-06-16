@@ -104,7 +104,7 @@ const ExpenseEditPage = () => {
       notification.error({ description: "No expense id" });
       return;
     }
-    dispatch(deleteExpense(expenseId));
+    dispatch(deleteExpense({expenseId,amount}));
 
     if (status === "succeeded") {
       resetForm();

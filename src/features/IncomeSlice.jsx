@@ -97,13 +97,14 @@ export const addIncome = createAsyncThunk(
       created_at: new Date().toISOString(),
     };
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("incomes")
         .insert({ ...formatData })
-        .single();
+        .single()
+        .select(`*,category:categories(*)`);
       if (error) throw error;
       notification.success({ description: "Income added successfully" });
-      return formatData;
+      return data;
     } catch (error) {
       notification.error({ description: error.message });
       return rejectWithValue(error.message);
@@ -128,14 +129,15 @@ export const updateIncome = createAsyncThunk(
         description: income.description,
         budget_id: income.budget_id,
       };
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("incomes")
         .update({ ...formatedData })
         .eq("id", incomeId)
-        .single();
+        .single()
+        .select(`*,category:categories(*)`);
       if (error) throw error;
       notification.success({ description: "Income updated successfully" });
-      return;
+      return data;
     } catch (error) {
       notification.error({ description: error.message });
       return rejectWithValue(error.message);
@@ -146,19 +148,19 @@ export const updateIncome = createAsyncThunk(
 // Delete income
 export const deleteIncome = createAsyncThunk(
   "incomes/deleteIncome",
-  async (id, { rejectWithValue }) => {
+  async (deletedIncome, { rejectWithValue }) => {
     try {
       const { error } = await supabase
         .from("incomes")
         .delete()
-        .eq("id", id)
+        .eq("id", deletedIncome.incomeId)
         .single();
       if (error) {
         notification.error({ description: error });
         throw error;
       }
       notification.success({ description: "Income deleted successfully" });
-      return { id };
+      return { id: deletedIncome.incomeId, amount: deletedIncome.amount };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -215,13 +217,12 @@ const IncomeSlice = createSlice({
       })
 
       // Add income
-      // TODO: handle adding income to state
       .addCase(addIncome.pending, (state) => {
         state.status = "loading";
       })
       .addCase(addIncome.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // state.incomes.push(action.payload);
+        state.incomes.push(action.payload);
         state.totalIncome += action.payload.amount;
       })
       .addCase(addIncome.rejected, (state, action) => {
@@ -230,18 +231,22 @@ const IncomeSlice = createSlice({
       })
 
       // Update income
-      // TODO: handle updating income in state
       .addCase(updateIncome.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateIncome.fulfilled, (state) => {
+      .addCase(updateIncome.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // const index = state.incomes.findIndex(
-        //   (income) => income.id === action.payload.id,
-        // );
-        // if (index !== -1) {
-        //   state.incomes[index] = action.payload;
-        // }
+        const updatedIncome = action.payload;
+        const index = state.incomes.findIndex(
+          (income) => income.id === updatedIncome.id,
+        );
+        if (index !== -1) {
+          state.incomes[index].amount = updatedIncome.amount;
+          state.totalIncome = state.incomes.reduce(
+            (total, income) => total + income.amount,
+            0,
+          );
+        }
       })
       .addCase(updateIncome.rejected, (state, action) => {
         state.status = "failed";
@@ -249,7 +254,6 @@ const IncomeSlice = createSlice({
       })
 
       // Delete income
-      // TODO: handle deleting income in state
       .addCase(deleteIncome.pending, (state) => {
         state.status = "loading";
       })
@@ -258,6 +262,7 @@ const IncomeSlice = createSlice({
         state.incomes = state.incomes.filter(
           (income) => income.id !== action.payload.id,
         );
+        state.totalIncome -= action.payload.amount;
       })
       .addCase(deleteIncome.rejected, (state, action) => {
         state.status = "failed";

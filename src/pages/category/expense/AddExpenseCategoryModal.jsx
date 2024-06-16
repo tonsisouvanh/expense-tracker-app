@@ -19,7 +19,6 @@ const AddExpenseCategoryModal = ({ isOpen, setIsOpen }) => {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setIsOpen(false);
   };
   return (

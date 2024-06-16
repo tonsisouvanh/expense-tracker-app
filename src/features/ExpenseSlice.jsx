@@ -95,13 +95,14 @@ export const addExpense = createAsyncThunk(
       ),
     };
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("expenses")
         .insert({ ...formatData })
-        .single();
+        .single()
+        .select(`*,category:categories(*)`);
       if (error) throw error;
       notification.success({ description: "Expense added successfully" });
-      return formatData;
+      return data;
     } catch (error) {
       notification.error({
         description: error.message || "Something went wrong",
@@ -128,14 +129,15 @@ export const updateExpense = createAsyncThunk(
         description: expense.description,
         budget_id: expense.budget_id,
       };
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("expenses")
         .update({ ...formatedData })
         .eq("id", expenseId)
-        .single();
+        .single()
+        .select(`*,category:categories(*)`);
       if (error) throw error;
       notification.success({ description: "Expense updated successfully" });
-      return;
+      return data;
     } catch (error) {
       notification.error({ description: error.message });
       return rejectWithValue(error.message);
@@ -146,19 +148,19 @@ export const updateExpense = createAsyncThunk(
 // Delete expense
 export const deleteExpense = createAsyncThunk(
   "expenses/deleteExpense",
-  async (id, { rejectWithValue }) => {
+  async (deletedExpense, { rejectWithValue }) => {
     try {
       const { error } = await supabase
         .from("expenses")
         .delete()
-        .eq("id", id)
+        .eq("id", deletedExpense.expenseId)
         .single();
       if (error) {
         notification.error({ description: error });
         throw error;
       }
       notification.success({ description: "Expense deleted successfully" });
-      return { id };
+      return { id: deletedExpense.expenseId, amount: deletedExpense.amount };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -183,6 +185,7 @@ const ExpenseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       // Fetch expenses
       .addCase(fetchExpensesByBudgetPeriod.pending, (state) => {
         state.status = "loading";
@@ -212,36 +215,44 @@ const ExpenseSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
       // Add expense
       .addCase(addExpense.pending, (state) => {
         state.status = "loading";
       })
       .addCase(addExpense.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // state.expenses.push(action.payload);
+        state.expenses.push(action.payload);
         state.totalExpense += action.payload.amount;
       })
       .addCase(addExpense.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
+
       // Update expense
       .addCase(updateExpense.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateExpense.fulfilled, (state) => {
+      .addCase(updateExpense.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // const index = state.expenses.findIndex(
-        //   (expense) => expense.id === action.payload.id,
-        // );
-        // if (index !== -1) {
-        //   state.expenses[index] = action.payload;
-        // }
+        const updatedExpense = action.payload;
+        const index = state.expenses.findIndex(
+          (expense) => expense.id === updatedExpense.id,
+        );
+        if (index !== -1) {
+          state.expenses[index].amount = updatedExpense.amount;
+          state.totalExpense = state.expenses.reduce(
+            (total, expense) => total + expense.amount,
+            0,
+          );
+        }
       })
       .addCase(updateExpense.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
+
       // Delete expense
       .addCase(deleteExpense.pending, (state) => {
         state.status = "loading";
@@ -251,6 +262,7 @@ const ExpenseSlice = createSlice({
         state.expenses = state.expenses.filter(
           (expense) => expense.id !== action.payload.id,
         );
+        state.totalExpense -= action.payload.amount;
       })
       .addCase(deleteExpense.rejected, (state, action) => {
         state.status = "failed";

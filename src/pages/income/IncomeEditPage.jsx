@@ -99,13 +99,14 @@ const IncomeEditPage = () => {
       dispatch(resetIncomeStatus());
     }
   };
+
   const handleDelete = (incomeId) => {
     if (!incomeId) {
       notification.error({ description: "No income id" });
       return;
     }
 
-    dispatch(deleteIncome(incomeId));
+    dispatch(deleteIncome({incomeId, amount}));
 
     if (status === "succeeded") {
       resetForm();

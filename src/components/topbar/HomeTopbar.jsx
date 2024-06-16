@@ -27,15 +27,13 @@ const HomeTopbar = () => {
   const navigate = useNavigate();
   const remaining = activeBudget?.amount - totalExpense;
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
+  const handleChange = (value) => {};
   return (
     // Home top bar
     <div className="sticky top-0 w-full rounded-b-3xl bg-primary p-3 text-secondary">
       <article className="relative flex flex-col items-center gap-5">
         <Avatar
-          className="absolute cursor-pointer left-0 top-0"
+          className="absolute left-0 top-0 cursor-pointer"
           size="large"
           onClick={() => navigate("/profile")}
           style={{ backgroundColor: "#000000" }}
