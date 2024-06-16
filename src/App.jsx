@@ -36,7 +36,7 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user && user.userId) {
+    if (user) {
       dispatch(fetchActiveBudget());
       dispatch(fetchCategories());
       dispatch(fetchIncomesByBudgetPeriod());

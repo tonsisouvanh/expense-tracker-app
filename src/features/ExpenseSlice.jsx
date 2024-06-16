@@ -53,6 +53,7 @@ export const fetchExpensesByBudgetPeriod = createAsyncThunk(
       const { data: budgetData, error: budgetError } = await supabase
         .from("budgets")
         .select("id,start_date,end_date")
+        .eq("user_id", user.id)
         .lte("start_date", currentDate)
         .gte("end_date", currentDate)
         .limit(1);
