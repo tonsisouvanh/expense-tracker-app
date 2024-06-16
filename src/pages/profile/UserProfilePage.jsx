@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const UserProfilePage = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
   const handleLogout = async () => {
     try {
       await dispatch(signOut()).unwrap();

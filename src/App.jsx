@@ -15,7 +15,6 @@ import {
   ExpenseEditPage,
 } from "./pages";
 import Spinner from "./components/Spinner";
-import Test from "./pages/Test";
 import ProtectedRoute from "./layout/ProtectedRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeAuthListener } from "./store/features/auth/authSlice";
@@ -140,14 +139,6 @@ const App = () => {
                   }
                 />
               </Route>
-              <Route
-                path="test"
-                element={
-                  <Suspense fallback={<Spinner />}>
-                    <Test />
-                  </Suspense>
-                }
-              />
             </Route>
           </Routes>
 

@@ -25,7 +25,7 @@ export const signIn = createAsyncThunk(
       "auth_info",
       JSON.stringify({ userId: data.user.id, email: data.user.email }),
     );
-    return data.session;
+    return { email: data.user.email, userId: data.user.id };
   },
 );
 
