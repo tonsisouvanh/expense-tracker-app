@@ -35,7 +35,7 @@ const HomeTopbar = () => {
     <div className="sticky top-0 w-full rounded-b-3xl bg-primary p-3 text-secondary">
       <article className="relative flex flex-col items-center gap-5">
         <Avatar
-          className="absolute left-0 top-0"
+          className="absolute cursor-pointer left-0 top-0"
           size="large"
           onClick={() => navigate("/profile")}
           style={{ backgroundColor: "#000000" }}
@@ -76,7 +76,7 @@ const HomeTopbar = () => {
         </div>
         <div className="grid w-full grid-cols-2 gap-3 text-sm">
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-3 text-white">
-            <div className="w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
+            <div className="h-[45px] w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
               <img src={income} className="h-full w-full object-cover" alt="" />
             </div>
             <div>
@@ -85,7 +85,7 @@ const HomeTopbar = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 rounded-3xl bg-secondary p-3 text-white">
-            <div className="w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
+            <div className="h-[45px] w-[60px] min-w-[60px] rounded-2xl bg-white px-4 py-2">
               <img
                 src={expense}
                 className="h-full w-full object-cover"

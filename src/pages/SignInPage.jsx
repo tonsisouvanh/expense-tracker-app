@@ -29,11 +29,11 @@ const SignInPage = () => {
   }, [navigate, user, status, error]);
 
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="flex justify-center items-center w-full h-screen">
       <Form
         name="auth"
         labelCol={{
-          span: 8,
+          span: 10,
         }}
         wrapperCol={{
           span: 16,
@@ -58,7 +58,7 @@ const SignInPage = () => {
             },
           ]}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
 
         <Form.Item
@@ -71,7 +71,7 @@ const SignInPage = () => {
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password size="large" />
         </Form.Item>
 
         <Form.Item
@@ -94,9 +94,10 @@ const SignInPage = () => {
           <Button
             loading={status === "loading"}
             type="primary"
+            size="large"
             htmlType="submit"
           >
-            Submit
+            Log in
           </Button>
         </Form.Item>
       </Form>

@@ -17,17 +17,31 @@ import {
 import Spinner from "./components/Spinner";
 import Test from "./pages/Test";
 import ProtectedRoute from "./layout/ProtectedRoute";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initializeAuthListener } from "./store/features/auth/authSlice";
+import { fetchActiveBudget } from "./features/BudgetSlice";
+import { fetchCategories } from "./features/CategorySlice";
+import { fetchIncomesByBudgetPeriod } from "./features/IncomeSlice";
+import { fetchExpensesByBudgetPeriod } from "./features/ExpenseSlice";
 
 const App = () => {
   const { defaultAlgorithm, darkAlgorithm } = theme;
   const [isDarkMode] = useState(true);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(initializeAuthListener());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user && user.userId) {
+      dispatch(fetchActiveBudget());
+      dispatch(fetchCategories());
+      dispatch(fetchIncomesByBudgetPeriod());
+      dispatch(fetchExpensesByBudgetPeriod());
+    }
+  }, [dispatch, user]);
 
   return (
     <>

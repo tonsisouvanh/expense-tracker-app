@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useIncomeCategory from "../../hooks/useIncomeCategory";
 import useExpenseCategory from "../../hooks/useExpenseCategory";
 import moment from "moment";
@@ -6,19 +6,21 @@ import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 import Transaction from "./Transaction";
 import { formatDateString } from "../../utils";
-import { fetchExpensesByBudgetPeriod } from "../../features/ExpenseSlice";
-import { fetchIncomesByBudgetPeriod } from "../../features/IncomeSlice";
 const TransactionList = () => {
-  const dispatch = useDispatch();
   const { incomeIconMapping } = useIncomeCategory();
+
   const { expenseIconMapping } = useExpenseCategory();
-  const { user } = useSelector((state) => state.auth);
+
   const { incomes, status: incomeStatus } = useSelector(
     (state) => state.income,
   );
+
+  console.log("🚀 ~ TransactionList ~ incomeStatus:", incomeStatus);
   const { expenses, status: expenseStatus } = useSelector(
     (state) => state.expense,
   );
+  console.log("🚀 ~ TransactionList ~ expenseStatus:", expenseStatus);
+
   const [transactionsByDate, setTransactionsByDate] = useState({});
 
   useEffect(() => {
@@ -37,20 +39,16 @@ const TransactionList = () => {
     setTransactionsByDate(groupedTransactions);
   }, [expenses, incomes]);
 
-  useEffect(() => {
-    dispatch(fetchExpensesByBudgetPeriod(user.userId));
-    dispatch(fetchIncomesByBudgetPeriod(user.userId));
-  }, [dispatch, user.userId]);
-
-  if (incomeStatus === "failed" || expenseStatus === "failed") {
-    return <div>Failed to fetch transactions</div>;
-  }
-  if (incomes?.length + expenses?.length === 0) {
-    return <div>No transactions</div>;
-  }
   if (incomeStatus === "loading" || expenseStatus === "loading") {
     return <Spinner />;
   }
+  // if (incomeStatus === "failed" || expenseStatus === "failed") {
+  //   return <div>Failed to fetch transactions</div>;
+  // }
+  if (incomes?.length + expenses?.length === 0) {
+    return <div>No transactions</div>;
+  }
+
   return (
     <>
       <div>
@@ -59,7 +57,9 @@ const TransactionList = () => {
             .sort((a, b) => moment(b).diff(moment(a)))
             .map((date) => (
               <div key={date}>
-                <div className="text-lg mb-2 font-semibold">{formatDateString(date,"YYYY-MM-DD","DD-MM-YYYY")}</div>
+                <div className="mb-2 text-lg font-semibold">
+                  {formatDateString(date, "YYYY-MM-DD", "DD-MM-YYYY")}
+                </div>
                 {transactionsByDate[date].map((tran, index) => (
                   <div key={index} className="mb-2">
                     <Transaction

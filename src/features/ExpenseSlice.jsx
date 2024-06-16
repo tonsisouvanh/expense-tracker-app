@@ -42,7 +42,8 @@ export const fetchExpenses = createAsyncThunk(
 // Fetch expense by budget period
 export const fetchExpensesByBudgetPeriod = createAsyncThunk(
   "expenses/fetchExpensesByBudgetPeriod",
-  async (userId, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
+    const { user } = (await supabase.auth.getSession()).data.session;
     try {
       const currentDate = formatDateString(
         new Date().toLocaleDateString(),
@@ -64,7 +65,7 @@ export const fetchExpensesByBudgetPeriod = createAsyncThunk(
       const { data, error } = await supabase
         .from("expenses")
         .select(`*,category:categories(*)`)
-        .eq("user_id", userId)
+        .eq("user_id", user.id)
         .eq("is_deleted", false)
         .eq("budget_id", budgetId)
         .gte("transaction_date", startDate)
