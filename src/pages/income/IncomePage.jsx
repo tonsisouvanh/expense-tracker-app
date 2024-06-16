@@ -74,7 +74,6 @@ const IncomePage = () => {
     };
 
     dispatch(addIncome(newIncome));
-
     if (status === "succeeded") {
       resetForm();
       navigate("/");

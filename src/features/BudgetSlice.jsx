@@ -6,19 +6,25 @@ import toast from "react-hot-toast";
 export const fetchActiveBudget = createAsyncThunk(
   "budgets/fetchActiveBudget",
   async () => {
-    const currentDate = formatDateString(
-      new Date().toLocaleDateString(),
-      "MM-DD-YYYY",
-      "YYYY-MM-DD",
-    );
-    const { data, error } = await supabase
-      .from("budgets")
-      .select("*")
-      .lte("start_date", currentDate)
-      .gte("end_date", currentDate)
-      .limit(1);
-    if (error) throw new Error(error.message);
-    return data[0];
+    try {
+      const { user } = (await supabase.auth.getSession()).data.session;
+      const currentDate = formatDateString(
+        new Date().toLocaleDateString(),
+        "MM-DD-YYYY",
+        "YYYY-MM-DD",
+      );
+      const { data, error } = await supabase
+        .from("budgets")
+        .select("*")
+        .eq("user_id", user.id)
+        .lte("start_date", currentDate)
+        .gte("end_date", currentDate)
+        .limit(1);
+      if (error) throw new Error(error.message);
+      return data[0];
+    } catch (error) {
+      toast.error(error);
+    }
   },
 );
 

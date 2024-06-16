@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 const UserProfilePage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-
   const handleLogout = async () => {
     try {
       await dispatch(signOut()).unwrap();
@@ -25,7 +24,6 @@ const UserProfilePage = () => {
             <UserOutlined className="text-3xl" />
           </div>
         </div>
-        <h3 className="mb-2 text-xl font-semibold">{user?.name}</h3>
         <p className="mb-6 text-gray-300">{user?.email}</p>
         <Button type="primary" onClick={handleLogout}>
           LOGOUT

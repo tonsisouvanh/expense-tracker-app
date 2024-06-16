@@ -93,7 +93,6 @@ const ExpenseEditPage = () => {
     };
 
     dispatch(updateExpense(updatedExpense));
-
     if (status === "succeeded") {
       resetForm();
       navigate("/");
